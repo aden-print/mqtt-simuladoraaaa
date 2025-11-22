@@ -1,0 +1,130 @@
+version: '3.8'
+
+services:
+  # --- Broker MQTT ---
+  mqtt-broker:
+    image: eclipse-mosquitto:2
+    container_name: mqtt-broker
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - ./mosquitto/config:/mosquitto/config
+      - ./mosquitto/data:/mosquitto/data
+      - ./mosquitto/log:/mosquitto/log
+    restart: unless-stopped
+
+  # --- Base de Datos ---
+  influxdb:
+    image: influxdb:2.7
+    container_name: influxdb
+    ports:
+      - "8086:8086"
+    volumes:
+      - influxdb_data:/var/lib/influxdb2
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=admin
+      - DOCKER_INFLUXDB_INIT_PASSWORD=password123
+      - DOCKER_INFLUXDB_INIT_ORG=utp
+      - DOCKER_INFLUXDB_INIT_BUCKET=sensors
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=mySuperSecretToken123!
+    restart: unless-stopped
+
+  # --- Servidor de Tiempo ---
+  time-server:
+    build: .
+    container_name: time-server
+    depends_on:
+      - mqtt-broker
+    command: "node time-server/time-server.js"
+    restart: on-failure
+
+  # --- Suscriptor de Persistencia ---
+  persistence-subscriber:
+    build: .
+    container_name: persistence-subscriber
+    depends_on:
+      - mqtt-broker
+      - influxdb
+    command: "node subscriber/persistence-subscriber.js"
+    environment:
+      - INFLUXDB_URL=http://influxdb:8086
+      - INFLUXDB_TOKEN=mySuperSecretToken123!
+      - INFLUXDB_ORG=utp
+      - INFLUXDB_BUCKET=sensors
+      - PROCESS_ID=99
+    restart: on-failure
+
+  # --- Monitor Web ---
+  web-monitor:
+    image: nginx:1.25-alpine
+    container_name: web-monitor
+    ports:
+      - "8080:80"
+    volumes:
+      - ./web-monitor:/usr/share/nginx/html:ro
+    depends_on:
+      - mqtt-broker
+    restart: unless-stopped
+
+  # --- 5 SENSORES (PUBLISHERS) ---
+  # NOTA: El lock-coordinator ha sido ELIMINADO intencionalmente.
+
+  publisher-1:
+    build: .
+    container_name: publisher-1
+    depends_on: [mqtt-broker, time-server]
+    command: "node publisher/publisher.js"
+    environment:
+      - DEVICE_ID=sensor-1
+      - PROCESS_PRIORITY=10
+      - CLOCK_DRIFT_RATE=0
+      - ELECTION_PARTICIPANTS=sensor-1:10,sensor-2:20,sensor-3:30,sensor-4:40,sensor-5:50
+
+  publisher-2:
+    build: .
+    container_name: publisher-2
+    depends_on: [mqtt-broker, time-server]
+    command: "node publisher/publisher.js"
+    environment:
+      - DEVICE_ID=sensor-2
+      - PROCESS_PRIORITY=20
+      - CLOCK_DRIFT_RATE=0
+      - ELECTION_PARTICIPANTS=sensor-1:10,sensor-2:20,sensor-3:30,sensor-4:40,sensor-5:50
+
+  publisher-3:
+    build: .
+    container_name: publisher-3
+    depends_on: [mqtt-broker, time-server]
+    command: "node publisher/publisher.js"
+    environment:
+      - DEVICE_ID=sensor-3
+      - PROCESS_PRIORITY=30
+      - CLOCK_DRIFT_RATE=0
+      - ELECTION_PARTICIPANTS=sensor-1:10,sensor-2:20,sensor-3:30,sensor-4:40,sensor-5:50
+
+  publisher-4:
+    build: .
+    container_name: publisher-4
+    depends_on: [mqtt-broker, time-server]
+    command: "node publisher/publisher.js"
+    environment:
+      - DEVICE_ID=sensor-4
+      - PROCESS_PRIORITY=40
+      - CLOCK_DRIFT_RATE=0
+      - ELECTION_PARTICIPANTS=sensor-1:10,sensor-2:20,sensor-3:30,sensor-4:40,sensor-5:50
+
+  publisher-5:
+    build: .
+    container_name: publisher-5
+    depends_on: [mqtt-broker, time-server]
+    command: "node publisher/publisher.js"
+    environment:
+      - DEVICE_ID=sensor-5
+      - PROCESS_PRIORITY=50
+      - CLOCK_DRIFT_RATE=0
+      - ELECTION_PARTICIPANTS=sensor-1:10,sensor-2:20,sensor-3:30,sensor-4:40,sensor-5:50
+
+volumes:
+  influxdb_data:
