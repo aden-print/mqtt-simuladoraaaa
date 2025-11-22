@@ -1,0 +1,7 @@
+# Dependencias de Node.js
+node_modules/
+
+# Dependencias del sistema operativo
+.DS_Store
+Thumbs.db
+desktop.ini

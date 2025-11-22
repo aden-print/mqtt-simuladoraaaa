@@ -1,0 +1,233 @@
+/* /web-monitor/style.css */
+body {
+    font-family: sans-serif;
+    margin: 0;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+header {
+    background-color: #005a8c; /* Azul UTP */
+    color: white;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+//aasas
+
+
+header h1 {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+#browser-time {
+    font-size: 0.8rem;
+    color: #eee;
+    text-align: right;
+    margin-bottom: 4px;
+}
+
+#monitor-clock {
+    font-size: 0.9rem;
+    color: #ffc107; /* Amarillo */
+    text-align: right;
+    margin-bottom: 4px;
+    font-weight: bold;
+}
+
+#monitor-vector-clock {
+    font-size: 0.8rem;
+    color: #17a2b8; /* Cyan */
+    text-align: right;
+    margin-bottom: 4px;
+    font-weight: bold;
+}
+
+#connection-status {
+    font-weight: bold;
+    padding: 0.3rem 0.6rem;
+    border-radius: 4px;
+    background-color: #dc3545; /* Rojo inicial */
+    text-align: right;
+}
+
+#connection-status.connected {
+    background-color: #28a745; /* Verde si conectado */
+}
+
+main {
+    padding: 1rem;
+}
+
+section {
+    background-color: white;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+h2 {
+    margin-top: 0;
+    color: #005a8c;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 0.5rem;
+}
+
+#device-list, #sensor-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.device-status-item, .sensor-card {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 1rem;
+    background-color: #f9f9f9;
+    min-width: 200px; /* Un poco más ancho */
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.device-status-item span {
+    display: block;
+    text-align: center;
+}
+
+.device-id {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.status-indicator {
+    padding: 0.2rem 0.5rem;
+    border-radius: 3px;
+    color: white;
+    font-size: 0.8rem;
+}
+
+.status-indicator.online {
+    background-color: #28a745; /* Verde */
+}
+
+.status-indicator.offline {
+    background-color: #dc3545; /* Rojo */
+}
+
+.sensor-card h3 {
+    margin-top: 0;
+    margin-bottom: 0.8rem;
+    font-size: 1rem;
+    color: #005a8c;
+}
+
+.sensor-card p {
+    margin: 0.3rem 0;
+    font-size: 0.9rem;
+}
+
+.sensor-card p.delta {
+    font-weight: bold;
+}
+
+.sensor-card p.delta-positive {
+    color: #dc3545; /* Rojo para deriva positiva (futuro) */
+}
+
+.sensor-card p.delta-negative {
+    color: #007bff; /* Azul para deriva negativa (pasado) */
+}
+
+#message-log {
+    background-color: #e9ecef;
+    border: 1px solid #ced4da;
+    height: 200px;
+    overflow-y: scroll;
+    padding: 0.5rem;
+    font-size: 0.8rem;
+    white-space: pre-wrap; /* Para que el texto se ajuste */
+}
+
+/* --- Estilos para la nueva Sección Mutex --- */
+#mutex-section {
+    background-color: #fffbef; /* Un fondo amarillo claro */
+    border: 1px solid #ffeeba;
+}
+
+#mutex-section h2 {
+    color: #856404; /* Color oscuro para el título */
+}
+
+#resource-status-wrapper {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+#resource-status-light {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #6c757d; /* Gris por defecto */
+    margin-right: 10px;
+    border: 1px solid rgba(0,0,0,0.2);
+}
+
+#resource-status-light.available {
+    background-color: #28a745; /* Verde */
+    box-shadow: 0 0 8px #28a745;
+}
+
+#resource-status-light.busy {
+    background-color: #dc3545; /* Rojo */
+    box-shadow: 0 0 8px #dc3545;
+}
+
+#resource-status-text {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+#resource-details p {
+    margin: 0.25rem 0;
+}
+
+#resource-details strong {
+    font-family: monospace;
+    font-size: 1.1rem;
+    color: #333;
+    background-color: #e9ecef;
+    padding: 2px 5px;
+    border-radius: 3px;
+}
+
+/* --- Estilos para el estado del sensor en las tarjetas --- */
+.sensor-card p.state {
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-top: 10px;
+    padding-top: 5px;
+    border-top: 1px dashed #eee;
+}
+
+.sensor-card p.state-idle {
+    color: #6c757d; /* Gris */
+}
+
+.sensor-card p.state-requesting {
+    color: #007bff; /* Azul */
+}
+
+.sensor-card p.state-calibrating {
+    color: #fd7e14; /* Naranja */
+    animation: pulse 1s infinite;
+}
+
+/* Animación para el estado de calibración */
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.4; }
+    100% { opacity: 1; }
+}

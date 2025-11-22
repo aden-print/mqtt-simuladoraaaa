@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitor MQTT - Sistemas Distribuidos</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Centro de Mando MQTT</h1>
+        <div>
+            <div id="browser-time"></div> 
+            <div id="monitor-clock">Reloj Lógico (Monitor): 0</div> 
+            <div id="monitor-vector-clock">Reloj Vectorial: [0,0,0,0]</div>
+            <div id="connection-status">Estado: Desconectado</div>
+        </div>
+    </header>
+
+    <main>
+        <section id="mutex-section">
+            <h2>Estación de Calibración (Recurso Compartido)</h2>
+            <div id="resource-status-wrapper">
+                <div id="resource-status-light"></div>
+                <div id="resource-status-text">Desconocido</div>
+            </div>
+            <div id="resource-details">
+                <p>Propietario: <strong id="resource-holder">---</strong></p>
+                <p>Cola de Espera: <strong id="resource-queue">---</strong></p>
+            </div>
+        </section>
+        
+        <section id="device-status-section">
+            <h2>Estado de Dispositivos</h2>
+            <div id="device-list">
+                </div>
+        </section>
+
+        <hr>
+
+        <section id="telemetry-section">
+            <h2>Telemetría en Tiempo Real</h2>
+            <div id="sensor-cards">
+                </div>
+        </section>
+        
+        <hr>
+
+        <section id="log-section">
+            <h2>Registro de Eventos</h2>
+            <pre id="message-log"></pre>
+        </section>
+    </main>
+
+    <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
